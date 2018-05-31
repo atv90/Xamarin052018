@@ -9,26 +9,104 @@ namespace HelloXamarin
 {
 	public partial class App : Application
 	{
-		public App ()
-		{
-			InitializeComponent();
+        
+   private Entry syötekenttä;
+        private Label arvauksenTulosLabel;
 
-			MainPage = new HelloXamarin.MainPage();
-		}
+        private int oikeaLuku;
+        private int arvaustenLukumäärä;
 
-		protected override void OnStart ()
-		{
-			// Handle when your app starts
-		}
+        public App()
+        {
+            Random rnd = new Random();
+            oikeaLuku = rnd.Next(1, 21);
+            arvaustenLukumäärä = 0;
 
-		protected override void OnSleep ()
-		{
-			// Handle when your app sleeps
-		}
+            // painonapin alustus
+            Button arvaaNappi = new Button();
+            arvaaNappi.Text = "Arvaa";
+            arvaaNappi.Clicked += ArvaaNappi_Clicked;
 
-		protected override void OnResume ()
-		{
-			// Handle when your app resumes
-		}
-	}
+            syötekenttä = new Entry
+            {
+                Keyboard = Keyboard.Numeric,
+                Text = ""
+            };
+
+            arvauksenTulosLabel = new Label();
+            arvauksenTulosLabel.Text = "";
+
+            // esimerkki XAML-sivun käytöstä
+            //MainPage = new EkaXamlSivu();
+
+            // The root page of your application
+            MainPage = new ContentPage
+            {
+                Content = new StackLayout
+                {
+                    //VerticalOptions = LayoutOptions.Center,
+                    Children = {
+                        new Label {
+                            HorizontalTextAlignment = TextAlignment.Center,
+                            Text = "Arvaa luku -peli",
+                            TextColor = Color.Yellow
+                        },
+                        new Label {
+                            HorizontalTextAlignment = TextAlignment.Center,
+                            Text = "Sovellusversio 0.10",
+                            TextColor = Color.Silver
+                        },
+                        syötekenttä,
+                        arvaaNappi,
+                        arvauksenTulosLabel
+                    }
+                }
+            };
+        }
+
+        private async void ArvaaNappi_Clicked(object sender, EventArgs e)
+        {
+            int arvaus = int.Parse(syötekenttä.Text);
+            if (arvaus < oikeaLuku)
+            {
+                arvauksenTulosLabel.Text = "Luku on suurempi.";
+                arvaustenLukumäärä++;
+            }
+            else if (arvaus > oikeaLuku)
+            {
+                arvauksenTulosLabel.Text = "Luku on pienempi.";
+                arvaustenLukumäärä++;
+            }
+            else if (arvaus == oikeaLuku)
+            {
+                arvauksenTulosLabel.Text = "Jee! Täsmälleen oikein!";
+                Random rnd = new Random();
+                oikeaLuku = rnd.Next(1, 21);
+
+                //HttpClient webClient = new HttpClient();
+                //string url = "http://localhost:2440/home/TallennaEnnatys/" + arvaustenLukumäärä;
+                //string jsonVastaus = await webClient.GetStringAsync(url);
+
+                arvaustenLukumäärä = 0;
+            }
+        }
+
+        protected override void OnStart()
+        {
+            // Handle when your app starts
+        }
+
+        protected override void OnSleep()
+        {
+            // Handle when your app sleeps
+        }
+
+        protected override void OnResume()
+        {
+            // Handle when your app resumes
+        }
+    }
 }
+
+
+
